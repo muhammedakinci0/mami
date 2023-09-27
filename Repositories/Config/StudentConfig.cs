@@ -30,7 +30,7 @@ namespace students.Repositories.Config
         public void Configure(EntityTypeBuilder<Classes> builder)
         {
             builder.HasData(
-                new Classes { Id = 1,  SinifAdi = "12-A"}
+                new Classes { Id = 1,  SinifAdi = "12-A", SchoolId=1}
 
             );
         }
@@ -50,7 +50,7 @@ namespace students.Repositories.Config
         public void Configure(EntityTypeBuilder<Lesson> builder)
         {
             builder.HasData(
-                new Lesson { Id = 1,  DersAdi = 1, SchoolId = 1 }
+                new Lesson { Id = 1,  DersAdi = "matematik", SchoolId = 1 }
 
             );
         }

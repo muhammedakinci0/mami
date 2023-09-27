@@ -7,6 +7,7 @@ using Microsoft.JSInterop;
 using System.Numerics;
 using studentschool.Models;
 using Microsoft.EntityFrameworkCore;
+using studentschool.Dtos;
 
 namespace schools.Controllers
 {
@@ -45,7 +46,7 @@ namespace schools.Controllers
             {
                 var school = _context
                  .Schools
-                 .Where(s => s.Id.Equals(id)).Include(x => x.Lessons)
+                 .Where(s => s.Id.Equals(id)).Include(x => x.Students)
                  .SingleOrDefault()
                  ;
 
@@ -65,18 +66,19 @@ namespace schools.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateOneSchool([FromBody] School school)
+        public IActionResult CreateOneSchool([FromBody] SchoolCreateDto input)
         {
             try
+
             {
+                School school = new School
+                {
+                    Il = input.Il,
+                    Ilce = input.Ilce,
+                    OkulAdi = input.OkulAdi,
+                };
                 if (school is null)
                     return BadRequest();
-
-
-                
-
-                
-
                 _context.Schools.Add(school);
                 _context.SaveChanges();
                 return StatusCode(201, school);
@@ -89,10 +91,18 @@ namespace schools.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public IActionResult UpdateOneSchool([FromRoute(Name = "id")] int id, [FromBody] School school)
+
+        public IActionResult UpdateOneSchool([FromRoute(Name = "id")] int id, [FromBody] SchoolUpdateDto input)
         {
             try
             {
+                School school = new School {
+                 Id = id,
+                 Il = input.Il,
+                 Ilce = input.Ilce,
+                 OkulAdi=input.OkulAdi,
+                };
+
                 var entity = _context
                 .Schools
                 .Where(s => s.Id.Equals(id))

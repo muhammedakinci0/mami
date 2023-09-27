@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 using students.Repositories;
 using studentschool.Models;
+using studentschool.Dtos;
 using System.Security.AccessControl;
 
 namespace students.Controllers
@@ -40,8 +41,8 @@ namespace students.Controllers
             {
                 var student = _context
                  .Students
-                 .Where(s => s.Id.Equals(id))
-                 .SingleOrDefault()
+                 .Where(s => s.Id.Equals(id)).Include(x => x.School)
+                 .SingleOrDefault();
                  ;
 
 
@@ -60,10 +61,20 @@ namespace students.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateOneStudent([FromBody] Student student)
+        public IActionResult CreateOneStudent([FromBody] StudentCreateDto input)
         {
             try
             {
+
+                Student student = new Student { 
+                 Ad=input.Ad,
+                  Soyad=input.Soyad,
+                   SchoolId=input.SchoolId,
+                   ClassesId=input.ClassesId,
+                    Sinif = input.Sinif
+                };
+
+
                 if (student is null)
                     return BadRequest();
 
@@ -80,27 +91,27 @@ namespace students.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public IActionResult UpdateOneStudent([FromRoute(Name = "id")] int id, [FromBody] Student student)
+        public IActionResult UpdateOneStudent([FromRoute(Name = "id")] int id, [FromBody] StudentUpdateDto input)
         {
             try
             {
-                var entity = _context
-                .Students
-                .Where(s => s.Id.Equals(id))
-                .SingleOrDefault();
+                Student student = new Student { 
+                Id=id,
+                Ad=input.Ad,
+                Soyad=input.Soyad,
+                 ClassesId=(int)input.ClassesId,
+                  SchoolId=(int)input.SchoolId,
+                  Sinif=(int)input.Sinif
+                };
 
-                if (entity == null)
+               
+
+                if (student== null)
                     return NotFound();
 
 
-                //if (id != student.Id)
-                //    return BadRequest();
-
-
-                entity.Ad = student.Ad;
-                entity.Soyad = student.Soyad;
-                entity.Sinif = student.Sinif;
-                _context.Students.Update(entity);
+                
+                _context.Students.Update(student);
 
                 _context.SaveChanges();
 
@@ -122,19 +133,18 @@ namespace students.Controllers
         {
             try
             {
-                var entitiy = _context
-                .Students
-                .Where(s => s.Id.Equals(id))
-                .SingleOrDefault();
+                Student student = new Student {
+                Id=id
+                };
 
-                if (entitiy is null)
+                if (student is null)
                     return NotFound(new
                     {
                         StatusCode = 404,
                         message = $"Girilen id: {id}, Böyle bir id Bulunamadı."
                     });
 
-                _context.Students.Remove(entitiy);
+                _context.Students.Remove(student);
                 _context.SaveChanges();
                 return NoContent();
             }

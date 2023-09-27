@@ -9,8 +9,8 @@
         public int Sinif { get; set; }
         public int SchoolId { get; set; }
         public int ClassesId { get; set; }
-        public virtual School School { get; set; }
-        public virtual Classes  Classes { get; set; }
+        public virtual School? School { get; set; }
+        public virtual Classes?  Classes { get; set; }
 
 
 

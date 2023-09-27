@@ -71,12 +71,6 @@ namespace lessons.Controllers
             {
                 if (lesson is null)
                     return BadRequest();
-
-
-
-
-
-
                 _context.Lessons.Add(lesson);
                 _context.SaveChanges();
                 return StatusCode(201, lesson);

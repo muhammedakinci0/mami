@@ -34,7 +34,7 @@ namespace studentschool.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SinifAdi = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SchoolId = table.Column<int>(type: "int", nullable: true)
+                    SchoolId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,7 +43,8 @@ namespace studentschool.Migrations
                         name: "FK_Classes_Schools_SchoolId",
                         column: x => x.SchoolId,
                         principalTable: "Schools",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,8 +53,8 @@ namespace studentschool.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DersAdi = table.Column<int>(type: "int", nullable: false),
-                    SchoolId = table.Column<int>(type: "int", nullable: true)
+                    DersAdi = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SchoolId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,7 +63,8 @@ namespace studentschool.Migrations
                         name: "FK_Lessons_Schools_SchoolId",
                         column: x => x.SchoolId,
                         principalTable: "Schools",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -85,13 +87,13 @@ namespace studentschool.Migrations
                         column: x => x.ClassesId,
                         principalTable: "Classes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Students_Schools_SchoolId",
                         column: x => x.SchoolId,
                         principalTable: "Schools",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,7 +105,7 @@ namespace studentschool.Migrations
                     Isim = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Soyisim = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SchoolId = table.Column<int>(type: "int", nullable: false),
-                    LessonId = table.Column<int>(type: "int", nullable: true)
+                    LessonId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -112,24 +114,30 @@ namespace studentschool.Migrations
                         name: "FK_Teachers_Lessons_LessonId",
                         column: x => x.LessonId,
                         principalTable: "Lessons",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Teachers_Schools_SchoolId",
                         column: x => x.SchoolId,
                         principalTable: "Schools",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
-
-            migrationBuilder.InsertData(
-                table: "Classes",
-                columns: new[] { "Id", "SchoolId", "SinifAdi" },
-                values: new object[] { 1, null, "12-A" });
 
             migrationBuilder.InsertData(
                 table: "Schools",
                 columns: new[] { "Id", "Il", "Ilce", "OkulAdi" },
                 values: new object[] { 1, "Istanbul", "Maltepe", "FSM Lisesi" });
+
+            migrationBuilder.InsertData(
+                table: "Classes",
+                columns: new[] { "Id", "SchoolId", "SinifAdi" },
+                values: new object[] { 1, 1, "12-A" });
+
+            migrationBuilder.InsertData(
+                table: "Lessons",
+                columns: new[] { "Id", "DersAdi", "SchoolId" },
+                values: new object[] { 1, "matematik", 1 });
 
             migrationBuilder.InsertData(
                 table: "Students",
@@ -144,7 +152,7 @@ namespace studentschool.Migrations
             migrationBuilder.InsertData(
                 table: "Teachers",
                 columns: new[] { "Id", "Isim", "LessonId", "SchoolId", "Soyisim" },
-                values: new object[] { 1, "Yunus", null, 1, "Temel" });
+                values: new object[] { 1, "Yunus", 1, 1, "Temel" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Classes_SchoolId",
